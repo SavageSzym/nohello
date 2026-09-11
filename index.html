@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speak Your Mind, dummy! — SavageSzym</title>
+<style>
+  :root{
+    --text-main: #2b2430;
+    --text-muted: #8b8393;
+    --accent: #9b59d0;
+    --accent-dark: #7d3fae;
+    --card-bg: #ffffff;
+    --divider: #ece5f2;
+    --bad: #d16a8a;
+    --bad-bg: #fbeef2;
+    --good: #4a9c7c;
+    --good-bg: #eaf6f1;
+    --font-display: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: var(--text-main);
+    line-height: 1.5;
+    background: linear-gradient(135deg, #f6e6f7 0%, #efe4f9 35%, #fbe6ee 70%, #fdeef2 100%);
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+  }
+
+  .island{
+    background: var(--card-bg);
+    border-radius: 28px;
+    max-width: 780px;
+    width: 100%;
+    padding: 48px 56px 40px;
+    box-shadow: 0 30px 70px -20px rgba(123, 63, 174, 0.25), 0 8px 24px -8px rgba(123, 63, 174, 0.15);
+  }
+
+  .top-row{ margin-bottom: 20px; }
+  .top-info h1{
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    font-weight: 800;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+  }
+  .top-info .about-text{
+    font-size: 0.98rem;
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  hr.divider{
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 26px 0;
+  }
+
+  .centered-section{ text-align: center; }
+  .centered-section h2{
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: var(--text-main);
+  }
+
+  /* ---- Chat comparison ---- */
+  .compare{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    text-align: left;
+  }
+  .chat-card{
+    border-radius: 18px;
+    padding: 18px 18px 20px;
+  }
+  .chat-card.bad{ background: var(--bad-bg); }
+  .chat-card.good{ background: var(--good-bg); }
+  .chat-label{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
+  .chat-label.bad{ color: var(--bad); }
+  .chat-label.good{ color: var(--good); }
+
+  .bubble{
+    background: #fff;
+    border-radius: 14px;
+    padding: 8px 13px;
+    margin-bottom: 8px;
+    font-size: 0.88rem;
+    max-width: 90%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  .bubble .time{
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    margin-top: 2px;
+  }
+  .bubble.wait{
+    color: var(--text-muted);
+    font-style: italic;
+    background: transparent;
+    box-shadow: none;
+    padding: 4px 13px;
+  }
+
+  /* ---- Chat rows with avatars ---- */
+  .chat-row{
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .chat-row.wait-row{
+    align-items: center;
+  }
+  .avatar{
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--divider);
+    object-fit: cover;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .avatar-spacer{
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .chat-row .bubble{
+    margin-bottom: 0;
+  }
+  .chat-row.me{
+    justify-content: flex-end;
+  }
+  .chat-row.me .bubble{
+    background: #0a84ff;
+    color: #fff;
+  }
+  .chat-row.me .bubble .time{
+    color: rgba(255,255,255,0.75);
+  }
+
+  /* ---- Points list ---- */
+  .points{
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .point-item{
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: 0.96rem;
+  }
+  .point-item .icon{ font-size: 1.1rem; flex-shrink: 0; }
+
+  /* ---- Snippet box ---- */
+  .snippet-box{
+    background: #f8f4fb;
+    border: 1px solid var(--divider);
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    position: relative;
+  }
+  .snippet-box .snippet-title{
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: none;
+    color: var(--accent-dark);
+    margin-bottom: 8px;
+  }
+  .snippet-box p{ margin: 0; }
+
+  .footer-note{
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+  .footer-note a{ color: var(--accent-dark); text-decoration: none; font-weight: 600; }
+  .footer-note a:hover{ text-decoration: underline; }
+
+  @media (max-width: 620px){
+    body{ padding: 32px 14px; }
+    .island{ padding: 32px 22px 26px; border-radius: 22px; }
+    .top-row{ margin-bottom: 8px; }
+    .top-info h1{ font-size: 1.7rem; }
+    .top-info .about-text{ font-size: 0.92rem; }
+    hr.divider{ margin: 20px 0; }
+    .centered-section h2{ font-size: 1.2rem; }
+    .compare{ grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 380px){
+    .top-info h1{ font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="island">
+
+  <!-- ============ TOP ============ -->
+  <div class="top-row">
+    <div class="top-info">
+      <h1>Speak Your Mind, dummy!</h1>
+      <p class="about-text">Before you send "hey" and wait - picture it from the other side for a second. Now picture just asking. That's this whole page.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============ COMPARISON ============ -->
+  <section class="centered-section">
+    <h2>Flip it around</h2>
+    <div class="compare">
+      <div class="chat-card bad">
+        <div class="chat-label bad">✕ how would you feel?</div>
+        <div class="chat-row">
+          <img class="avatar" src="https://publicdrive.savageszym.co.uk/assets/nohellosite/Hauber.jpg" alt="Hauber">
+          <div class="bubble">hey<span class="time">10:41</span></div>
+        </div>
+        <div class="chat-row wait-row">
+          <span class="avatar-spacer"></span>
+          <div class="bubble wait">…I stop what I'm doing, wait…</div>
+        </div>
+        <div class="chat-row">
+          <img class="avatar" src="https://publicdrive.savageszym.co.uk/assets/nohellosite/Hauber.jpg" alt="Hauber">
+          <div class="bubble">you around?<span class="time">10:53</span></div>
+        </div>
+        <div class="chat-row wait-row">
+          <span class="avatar-spacer"></span>
+          <div class="bubble wait">…12 more minutes of refreshing…</div>
+        </div>
+        <div class="chat-row">
+          <img class="avatar" src="https://publicdrive.savageszym.co.uk/assets/nohellosite/Hauber.jpg" alt="Hauber">
+          <div class="bubble">got a sec, need help with something<span class="time">11:38</span></div>
+        </div>
+        <div class="chat-row me">
+          <div class="bubble">??<span class="time">11:39</span></div>
+        </div>
+      </div>
+      <div class="chat-card good">
+        <div class="chat-label good">✓ what I'd actually want</div>
+        <div class="chat-row">
+          <img class="avatar" src="https://publicdrive.savageszym.co.uk/assets/nohellosite/Hauber.jpg" alt="Hauber">
+          <div class="bubble">hey - my script's throwing an error on step 3, can you take a look when free? traceback below<span class="time">10:41</span></div>
+        </div>
+        <div class="chat-row wait-row">
+          <span class="avatar-spacer"></span>
+          <div class="bubble wait">…I answer whenever I'm free, no back-and-forth needed…</div>
+        </div>
+        <div class="chat-row me">
+          <div class="bubble">ah yep, that's a null check missing on line 42, add "if (data) {" before that block and it'll sort itself out<span class="time">10:44</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ WHY ============ -->
+  <section class="centered-section">
+    <h2>Ask yourself this</h2>
+    <ul class="points">
+      <li class="point-item"><span class="icon">⏱️</span><span>How would you feel if you were me right now — dropping what I'm doing to wait, just to find out Hauber typed "hey" with no question attached?</span></li>
+      <li class="point-item"><span class="icon">🧠</span><span>If you were me getting that message, you couldn't help, prioritize, or tell if it's urgent — you'd just be stuck guessing.</span></li>
+      <li class="point-item"><span class="icon">💬</span><span>You'd rather get the full question in one message so you can answer it whenever you actually have a moment.</span></li>
+      <li class="point-item"><span class="icon">🙂</span><span>This isn't about skipping "hey" entirely — it's fine <em>attached</em> to the real message, just not sent alone while I'm waiting on Hauber's actual point.</span></li>
+    </ul>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ SEND THIS Instead ============ -->
+  <section class="centered-section">
+    <h2>Send this instead</h2>
+    <div class="snippet-box">
+      <div class="snippet-title">One message, everything in it</div>
+      <p>"Hey! Quick one — [what you need], [any relevant detail]. No rush, whenever you're free."</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <p class="footer-note">Send this page to someone who needs to get the memo <a href="#" id="page-link">nohello.savageszym.co.uk</a></p>
+
+</div>
+
+</body>
+</html>
